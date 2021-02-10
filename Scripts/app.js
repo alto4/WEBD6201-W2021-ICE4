@@ -140,7 +140,7 @@
 
           data += `
             <tr>
-              <th scope="row">${index}</th>
+              <th scope="row" class="text-center">${index}</th>
               <td>${contact.FullName}</td>
               <td>${contact.ContactNumber}</td>
               <td>${contact.EmailAddress}</td>
@@ -166,6 +166,12 @@
             location.href = "contact-list.html"; // refresh the page
            }
          });
+         
+        $("#addButton").on("click", function()
+        {
+          location.href = "edit-contact.html#";
+        });
+
       }
     }
     /**
@@ -186,6 +192,12 @@
         $("#fullName").val(contact.FullName);
         $("#contactNumber").val(contact.ContactNumber);
         $("#emailAddress").val(contact.EmailAddress);
+      } 
+      else 
+      {
+        // Modify page to show "Add Contact" and "Add Button", rather than default edit
+        $("main>h1").text("Add Contact");
+        $("#editButton").html(`<i class="fa fa-plus pa-lg"></i> Add`)
       }
 
       $("#editButton").on("click", function()
@@ -205,7 +217,7 @@
         contact.EmailAddress = $("#emailAddress").val();
 
         localStorage.setItem(key, contact.serialize());
-        
+
         location.href = "contact-list.html";      
       });
 
