@@ -101,7 +101,10 @@
 
             if(contact.serialize())
             {
-              localStorage.setItem((localStorage.length + 1).toString(), contact.serialize());
+
+              let key = contact.FullName.substring(0, 1) + Date.now();
+
+              localStorage.setItem(key, contact.serialize());
             }
           }
         });
@@ -117,7 +120,9 @@
 
         // Object keys to loop through
         let keys = Object.keys(localStorage);
-        
+        // Reset index to 1 each time elements are loaded in DOM to reorder indexes as needed
+        let index = 1;
+
         // Older forEach loop to display all keys in localStorage
         /*
         keys.forEach(key => {
@@ -133,21 +138,24 @@
           let contact = new core.Contact();
           contact.deserialize(contactData);
 
-          data += `<tr>
-          <th scope="row">${key}</th>
-          <td>${contact.FullName}</td>
-          <td>${contact.ContactNumber}</td>
-          <td>${contact.EmailAddress}</td>
-          <td class="text-center"><button value="${key}" class="btn btn-primary btn-sm edit"><i class="fas fa-edit fa-sm"></i> Edit</button></td>
-          <td class="text-center"><button value="${key}" class="btn btn-danger btn-sm delete"><i class="fas fa-trash-alt fa-sm"></i> Delete</button></td>
-        </tr>`;
+          data += `
+            <tr>
+              <th scope="row">${index}</th>
+              <td>${contact.FullName}</td>
+              <td>${contact.ContactNumber}</td>
+              <td>${contact.EmailAddress}</td>
+              <td class="text-center"><button value="${key}" class="btn btn-primary btn-sm edit"><i class="fas fa-edit fa-sm"></i> Edit</button></td>
+              <td class="text-center"><button value="${key}" class="btn btn-danger btn-sm delete"><i class="fas fa-trash-alt fa-sm"></i> Delete</button></td>
+            </tr>`;
+
+        index++;
         }
 
         contactList.innerHTML = data;
 
         //TODO - need to create an edit page
         $("button.edit").on("click", function(){
-          console.log($(this).val());
+          location.href = "edit-contact.html#" + $(this).val();
          });
 
          //TODO - need to fix this item - it breaks when we delete a middle item
@@ -160,8 +168,52 @@
          });
       }
     }
+    /**
+    * 
+    */
+    function displayEdit() 
+    {
+      let key = location.hash.substring(1);
 
+      // Create contact for exploring 
+      let contact = new core.Contact();
+
+      // Check that key is not empty
+      if(key != "") 
+      {
+        contact.deserialize(localStorage.getItem(key));
      
+        $("#fullName").val(contact.FullName);
+        $("#contactNumber").val(contact.ContactNumber);
+        $("#emailAddress").val(contact.EmailAddress);
+      }
+
+      $("#editButton").on("click", function()
+      {
+        console.log("CLOICK");
+
+        // Check if key is empty 
+        if(key == "")
+        {
+          // Create new key
+          key = contact.FullName.substring(0, 1) + Date.now();
+        }
+
+        // Copy contact info
+        contact.FullName = $("#fullName").val();
+        contact.ContactNumber = $("#contactNumber").val();
+        contact.EmailAddress = $("#emailAddress").val();
+
+        localStorage.setItem(key, contact.serialize());
+        
+        location.href = "contact-list.html";      
+      });
+
+      $("#cancelButton").on("click", function()
+      {
+        location.href = "contact-list.html";
+      });
+    }
 
     function Start()
     {
@@ -186,9 +238,11 @@
             break;
           case "Contact-List":
             displayContactList();
-          break;
+            break;
+          case "Edit Contact":
+            displayEdit();
+            break;
         }
-        
     }
 
     window.addEventListener("load", Start);
