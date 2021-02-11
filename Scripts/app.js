@@ -75,14 +75,20 @@
 
     }
 
-    function displayContact()
+
+    // REGEX Examples
+    // First Last name validation: /([A-Z][a-z]{1,25})+(\s|,|-)([A-Z][a-z]{1,25})+(\s|,|-)*/
+
+    function testFullName()
     {
       let messageArea = $("#messageArea").hide();
+      let fullNamePattern = /([A-Z][a-z]{1,25})+(\s|,|-)([A-Z][a-z]{1,25})+(\s|,|-)*/;
 
         // form validation
         $("#fullName").on("blur", function()
         {
-          if($(this).val().length < 2)
+
+          if(!fullNamePattern.test($(this).val()))
           {
             $(this).trigger("focus").trigger("select");
             messageArea.show().addClass("alert alert-danger").text("Please enter an appropriate Name");
@@ -92,13 +98,68 @@
               messageArea.removeAttr("class").hide();
           }
         });
+    }
 
-        $("#sendButton").on("click", (event)=> 
+    function testContactNumber()
+    {
+      let messageArea = $("#messageArea").hide();
+      let contactNumberPattern = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/;
+
+        // form validation
+        $("#contactNumber").on("blur", function()
         {
-          if($("#subscribeCheckbox")[0].checked)
-          {
-            let contact = new core.Contact(fullName.value, contactNumber.value, emailAddress.value);
 
+          if(!contactNumberPattern.test($(this).val()))
+          {
+            $(this).trigger("focus").trigger("select");
+            messageArea.show().addClass("alert alert-danger").text("Please enter a valid phone number.");
+          }
+          else
+          {
+              messageArea.removeAttr("class").hide();
+          }
+        });
+    }
+
+    function testEmailAddress()
+    {
+      let messageArea = $("#messageArea").hide();
+      let emailPattern = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})*$/;
+
+        // form validation
+        $("#emailAddress").on("blur", function()
+        {
+
+          if(!emailPattern.test($(this).val()))
+          {
+            $(this).trigger("focus").trigger("select");
+            messageArea.show().addClass("alert alert-danger").text("Please enter a valid email address.");
+          }
+          else
+          {
+              messageArea.removeAttr("class").hide();
+          }
+        });
+    }
+
+    function formValidation() 
+    {
+      testFullName();
+      testContactNumber();
+      testEmailAddress();
+    }
+
+    function displayContact()
+    {
+      
+    // Form validation
+    formValidation();
+
+      $("#sendButton").on("click", (event)=> 
+      {
+        if($("#subscribeCheckbox")[0].checked)
+        {
+          let contact = new core.Contact(fullName.value, contactNumber.value, emailAddress.value);
             if(contact.serialize())
             {
 
@@ -179,11 +240,15 @@
     */
     function displayEdit() 
     {
+
       let key = location.hash.substring(1);
 
       // Create contact for exploring 
       let contact = new core.Contact();
 
+      // Form validation
+      formValidation();
+      
       // Check that key is not empty
       if(key != "") 
       {
