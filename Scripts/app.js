@@ -296,17 +296,17 @@
       });
     }
 
-    displayRegister()
+    function displayRegister()
     {
 
     }
 
 
-    displayLogin()
+    function displayLogin()
     {
 
     }
-    
+
     function Start()
     {
         console.log("App Started...");
