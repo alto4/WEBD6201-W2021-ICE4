@@ -269,6 +269,9 @@
       {
         console.log("CLOICK");
 
+        if(document.forms[0].checkValidity())
+        {
+          
         // Check if key is empty 
         if(key == "")
         {
@@ -283,7 +286,8 @@
 
         localStorage.setItem(key, contact.serialize());
 
-        location.href = "contact-list.html";      
+//        location.href = "contact-list.html";      
+        }
       });
 
       $("#cancelButton").on("click", function()
@@ -292,6 +296,17 @@
       });
     }
 
+    displayRegister()
+    {
+
+    }
+
+
+    displayLogin()
+    {
+
+    }
+    
     function Start()
     {
         console.log("App Started...");
@@ -318,6 +333,12 @@
             break;
           case "Edit Contact":
             displayEdit();
+            break;
+          case "Login":
+            displayLogin();
+            break;
+          case "Register":
+            displayRegister();
             break;
         }
     }
