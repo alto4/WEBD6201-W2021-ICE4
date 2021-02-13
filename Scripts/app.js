@@ -184,14 +184,7 @@
         // Reset index to 1 each time elements are loaded in DOM to reorder indexes as needed
         let index = 1;
 
-        // Older forEach loop to display all keys in localStorage
-        /*
-        keys.forEach(key => {
-          console.log(key);
-        });
-        */
-
-        // Preferred syntax
+        // Preferred syntax to replace forEach loop
         for (const key of keys)
         {
           let contactData = localStorage.getItem((key).toString());
@@ -209,45 +202,41 @@
               <td class="text-center"><button value="${key}" class="btn btn-danger btn-sm delete"><i class="fas fa-trash-alt fa-sm"></i> Delete</button></td>
             </tr>`;
 
-        index++;
+          index++;
         }
 
         contactList.innerHTML = data;
 
         //TODO - need to create an edit page
         $("button.edit").on("click", function(){
-          location.href = "edit-contact.html#" + $(this).val();
+          location.href = "edit.html#" + $(this).val();
          });
 
-         //TODO - need to fix this item - it breaks when we delete a middle item
-         $("button.delete").on("click", function(){
-           if(confirm("Are you sure?"))
-           {
+        //TODO - need to fix this item - it breaks when we delete a middle item
+        $("button.delete").on("click", function(){
+          if(confirm("Are you sure?"))
+          {
             localStorage.removeItem($(this).val());
             location.href = "contact-list.html"; // refresh the page
-           }
-         });
+          }
+        });
          
         $("#addButton").on("click", function()
         {
-          location.href = "edit-contact.html#";
+          location.href = "edit.html#";
         });
-
       }
     }
+
     /**
-    * 
+    * displayEdit - shows contact entry form populated with existing data record details  
     */
     function displayEdit() 
     {
-
       let key = location.hash.substring(1);
 
       // Create contact for exploring 
       let contact = new core.Contact();
-
-      // Form validation
-      formValidation();
       
       // Check that key is not empty
       if(key != "") 
@@ -265,13 +254,11 @@
         $("#editButton").html(`<i class="fa fa-plus pa-lg"></i> Add`)
       }
 
+      // Form validation
+      formValidation();
+      
       $("#editButton").on("click", function()
-      {
-        console.log("CLOICK");
-
-        if(document.forms[0].checkValidity())
-        {
-          
+      {        
         // Check if key is empty 
         if(key == "")
         {
@@ -286,8 +273,8 @@
 
         localStorage.setItem(key, contact.serialize());
 
-//        location.href = "contact-list.html";      
-        }
+        location.href = "contact-list.html";      
+        
       });
 
       $("#cancelButton").on("click", function()
